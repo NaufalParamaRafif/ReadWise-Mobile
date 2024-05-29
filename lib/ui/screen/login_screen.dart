@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:ujilevel_laravel_perpus/ui/screen/homepage_screen.dart';
+import 'package:ujilevel_laravel_perpus/ui/screen/main_page.dart';
 import 'package:ujilevel_laravel_perpus/ui/screen/register_screen.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -61,7 +60,7 @@ class LoginScreen extends StatelessWidget {
               ),
               InkWell(
                 onTap: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePageScreen()));
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainPage()));
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 14),

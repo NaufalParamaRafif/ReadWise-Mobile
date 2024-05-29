@@ -13,6 +13,16 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
         colorScheme: ThemeData().colorScheme.copyWith(primary: Colors.blue),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.blue,
+          titleTextStyle: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+          ),
+          iconTheme: IconThemeData(
+            color: Colors.white,
+          ),
+        ),
       ),
       home: LoginScreen(),
     );
