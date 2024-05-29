@@ -3,6 +3,8 @@ import 'package:ujilevel_laravel_perpus/ui/screen/history_screen.dart';
 import 'package:ujilevel_laravel_perpus/ui/screen/homepage_screen.dart';
 import 'package:ujilevel_laravel_perpus/ui/screen/pengembalian_screen.dart';
 
+import 'profile_screen.dart';
+
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
 
@@ -16,6 +18,7 @@ class _MainPageState extends State<MainPage> {
     HomePageScreen(),
     PengembalianScreen(),
     HistoryScreen(),
+    ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {

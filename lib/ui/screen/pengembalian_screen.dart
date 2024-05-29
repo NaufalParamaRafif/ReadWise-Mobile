@@ -9,12 +9,53 @@ class PengembalianScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            BookCard(),
-            SizedBox(height: 16.0),
-            BookCard(),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Text(
+                    'Menunggu Peminjaman',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 8),
+              BookCard(),
+              SizedBox(height: 16.0),
+              BookCard(),
+              SizedBox(height: 16.0),
+              Row(
+                children: [
+                  Text(
+                    'Menunggu Pengembalian',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 8),
+              // 
+              SizedBox(height: 16.0),
+              Row(
+                children: [
+                  Text(
+                    'Denda',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 8),
+            ],
+          ),
         ),
       ),
     );
