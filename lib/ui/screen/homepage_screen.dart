@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:ujilevel_laravel_perpus/ui/screen/detail_book_screen.dart';
 
 class HomePageScreen extends StatelessWidget {
   const HomePageScreen({super.key});
@@ -74,8 +73,8 @@ class HomePageScreen extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Image.network(
-                  'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1575556021i/40744544.jpg',
+                Image.asset(
+                  'assets/images/fotobuku.jpg',
                   width: 100,
                   fit: BoxFit.contain,
                 ),
@@ -170,9 +169,14 @@ class HomePageScreen extends StatelessWidget {
                 vertical: 3, horizontal: 10), // padding around the grid
             itemCount: 11, // total number of items
             itemBuilder: (context, index) {
-              return Image.network(
-                'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1575556021i/40744544.jpg',
-                fit: BoxFit.contain,
+              return InkWell(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => DetailBookScreen()));
+                },
+                child: Image.asset(
+                  'assets/images/fotobuku.jpg',
+                  fit: BoxFit.contain,
+                ),
               );
             },
           ),
