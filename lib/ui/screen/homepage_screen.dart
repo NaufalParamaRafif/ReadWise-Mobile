@@ -9,22 +9,7 @@ class HomePageScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: TextField(
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(6),
-            ),
-            hintText: 'Password',
-            isDense: true,
-          ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.airline_seat_individual_suite_sharp),
-          ),
-        ],
+        title: SearchBar(),
       ),
       body: ListView(
         children: [
@@ -43,8 +28,8 @@ class HomePageScreen extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Image.network(
-                  'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1575556021i/40744544.jpg',
+                Image.asset(
+                  'assets/images/buku 2.jpg',
                   width: 100,
                   fit: BoxFit.contain,
                 ),
@@ -74,7 +59,7 @@ class HomePageScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Image.asset(
-                  'assets/images/fotobuku.jpg',
+                  'assets/images/buku 2.jpg',
                   width: 100,
                   fit: BoxFit.contain,
                 ),
@@ -84,11 +69,11 @@ class HomePageScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('By: Ingrid Chabbert'),
+                      Text('By: Sherly William E'),
                       Text(
-                        'Waves',
+                        'Physiological Psychology',
                         style: TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 20),
+                            fontWeight: FontWeight.w600, fontSize: 16),
                       ),
                       Row(
                         children: [
@@ -171,7 +156,10 @@ class HomePageScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               return InkWell(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => DetailBookScreen()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => DetailBookScreen()));
                 },
                 child: Image.asset(
                   'assets/images/fotobuku.jpg',
@@ -181,6 +169,28 @@ class HomePageScreen extends StatelessWidget {
             },
           ),
         ],
+      ),
+    );
+  }
+}
+
+class SearchBar extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ColoredBox(
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: TextField(
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.zero, // Makes the corners square
+            ),
+            hintText: 'Search',
+            isDense: true,
+          ),
+        ),
       ),
     );
   }

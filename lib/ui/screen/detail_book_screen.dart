@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ujilevel_laravel_perpus/ui/screen/semua_buku.dart';
 
 class DetailBookScreen extends StatelessWidget {
   @override
@@ -15,7 +16,7 @@ class DetailBookScreen extends StatelessWidget {
             children: [
               Center(
                 child: Image.asset(
-                  "assets/images/fotobuku.jpg",
+                  "assets/images/buku.jpg",
                   height: 200,
                 ),
               ),
@@ -36,13 +37,21 @@ class DetailBookScreen extends StatelessWidget {
               ),
               SizedBox(height: 1),
               Center(
-                child: Text(
-                  'By Morgan Housel',
-                  style: TextStyle(
-                      fontFamily: "Inter",
-                      fontSize: 16,
-                      fontWeight: FontWeight.w200,
-                      fontStyle: FontStyle.italic),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SemuaBukuBerdasarkan()));
+                  },
+                  child: Text(
+                    'By Morgan Housel',
+                    style: TextStyle(
+                        fontFamily: "Inter",
+                        fontSize: 16,
+                        fontWeight: FontWeight.w200,
+                        fontStyle: FontStyle.italic),
+                  ),
                 ),
               ),
               SizedBox(height: 40),
@@ -71,7 +80,7 @@ class DetailBookScreen extends StatelessWidget {
                   ),
                   InfoCard(
                     label: 'Tipe',
-                    value: 'E-Book',
+                    value: 'Cetak',
                     fontFamily: "Inika",
                     fontWeight: FontWeight.w200,
                   ),

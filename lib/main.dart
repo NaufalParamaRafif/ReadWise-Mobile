@@ -11,13 +11,14 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ThemeData().colorScheme.copyWith(primary: Colors.blue),
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.blue,
           titleTextStyle: TextStyle(
             color: Colors.white,
-            fontSize: 20,
+            fontSize: 25,
           ),
           iconTheme: IconThemeData(
             color: Colors.white,

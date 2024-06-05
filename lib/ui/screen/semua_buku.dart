@@ -6,7 +6,7 @@ class SemuaBukuBerdasarkan extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Penulis: Ingrid Chabbert',
+          'By Morgan Housel',
         ),
       ),
       body: SingleChildScrollView(
@@ -14,35 +14,26 @@ class SemuaBukuBerdasarkan extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Image.asset(
-                  'assets/images/fotobuku.jpg',
-                  scale: 4,
-                  height: 250, // Ubah tinggi menjadi sesuai
-                ),
-                SizedBox(width: 8), // Gantilah dengan lebar yang sesuai
-                Image.asset(
-                  'assets/images/fotobuku.jpg',
-                  scale: 4,
-                  height: 250,
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                Image.asset(
-                  'assets/images/fotobuku.jpg',
-                  scale: 4,
-                  height: 250,
-                ),
-                SizedBox(width: 8), // Gantilah dengan lebar yang sesuai
-                Image.asset(
-                  'assets/images/fotobuku.jpg',
-                  scale: 4,
-                  height: 250,
-                ),
-              ],
+            GridView.builder(
+              physics:
+                  NeverScrollableScrollPhysics(), // to disable GridView's scrolling
+              shrinkWrap: true, // You won't see infinite size error
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, // number of items in each row
+                mainAxisSpacing: 20, // spacing between rows
+                crossAxisSpacing: 20, // spacing between columns
+              ),
+              padding: EdgeInsets.symmetric(
+                  vertical: 10, horizontal: 10), // padding around the grid
+              itemCount: 5, // total number of items
+              itemBuilder: (context, index) {
+                return InkWell(
+                  child: Image.asset(
+                    'assets/images/buku 2.jpg',
+                    fit: BoxFit.contain,
+                  ),
+                );
+              },
             ),
           ],
         ),

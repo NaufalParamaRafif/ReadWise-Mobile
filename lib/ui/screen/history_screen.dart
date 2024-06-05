@@ -16,13 +16,13 @@ class HistoryScreen extends StatelessWidget {
               title: 'Sedang Dipinjam',
               books: [
                 Book(
-                  imageUrl: 'assets/images/fotobuku.jpg',
+                  imageUrl: 'assets/images/buku 4.jpg',
                   title: 'Theories Of Psychology',
                   author: 'Celia Higgins',
                   status: 'Sedang dipinjam',
                 ),
                 Book(
-                  imageUrl: 'assets/images/fotobuku.jpg',
+                  imageUrl: 'assets/images/buku 2.jpg',
                   title: 'Physiological Psychology',
                   author: 'Sherly Williams E',
                   status: 'Sedang dipinjam',
@@ -34,7 +34,7 @@ class HistoryScreen extends StatelessWidget {
               title: 'Sudah Dibaca',
               books: [
                 Book(
-                  imageUrl: 'assets/images/fotobuku.jpg',
+                  imageUrl: 'assets/images/buku.jpg',
                   title: 'The Psychology of Money',
                   author: 'Morgan Housel',
                   status: 'Sudah di baca',
