@@ -40,7 +40,7 @@ class PengembalianScreen extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 8),
-              // 
+              //
               SizedBox(height: 16.0),
               Row(
                 children: [
@@ -129,9 +129,9 @@ class BookCard extends StatelessWidget {
                     color: Colors.cyanAccent,
                     child: Center(
                       child: Text(
-                        '',
+                        'Sedang diproses',
                         style: TextStyle(
-                          fontFamily: "Inter",
+                          fontFamily: "Inika",
                           fontSize: 14,
                         ),
                       ),

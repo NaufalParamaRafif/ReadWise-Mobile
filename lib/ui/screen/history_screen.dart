@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ujilevel_laravel_perpus/ui/screen/detail_book_pengembalian.dart';
 
 class HistoryScreen extends StatelessWidget {
   @override
@@ -100,9 +101,19 @@ class BookItem extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 20.0),
       child: Row(
         children: [
-          Image.asset(
-            book.imageUrl,
-            height: 100,
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailBookPengembalian(),
+                ),
+              );
+            },
+            child: Image.asset(
+              book.imageUrl,
+              height: 100,
+            ),
           ),
           SizedBox(width: 20),
           Column(
@@ -132,6 +143,54 @@ class BookItem extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class BookDetailScreen extends StatelessWidget {
+  final Book book;
+
+  BookDetailScreen({required this.book});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(book.title),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Image.asset(book.imageUrl),
+            SizedBox(height: 20),
+            Text(
+              book.title,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 10),
+            Text(
+              'By ${book.author}',
+              style: TextStyle(
+                fontSize: 20,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+            SizedBox(height: 20),
+            Text(
+              book.status,
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.green,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

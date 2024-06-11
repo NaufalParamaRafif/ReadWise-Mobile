@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ujilevel_laravel_perpus/ui/screen/pengembalian_screen.dart';
 import 'package:ujilevel_laravel_perpus/ui/screen/semua_buku.dart';
 
-class DetailBookScreen extends StatelessWidget {
+class DetailBookPengembalian extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +17,7 @@ class DetailBookScreen extends StatelessWidget {
             children: [
               Center(
                 child: Image.asset(
-                  "assets/images/buku.jpg",
+                  "assets/images/buku 4.jpg",
                   height: 200,
                 ),
               ),
@@ -26,7 +26,7 @@ class DetailBookScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(1),
                 child: Center(
                   child: Text(
-                    'The Psychology of Money: Timeless Lessons on Wealth, Greed, and Happiness',
+                    'Theories of Psychology: Fundamentals, Applications and Future Directions',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontFamily: "Inika",
@@ -46,7 +46,7 @@ class DetailBookScreen extends StatelessWidget {
                             builder: (context) => SemuaBukuBerdasarkan()));
                   },
                   child: Text(
-                    'By Morgan Housel',
+                    'By Cellia Higgins',
                     style: TextStyle(
                         fontFamily: "Inter",
                         fontSize: 16,
@@ -136,12 +136,12 @@ class DetailBookScreen extends StatelessWidget {
                   padding: EdgeInsets.symmetric(vertical: 12),
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: Colors.blue,
+                    color: Color.fromARGB(255, 239, 142, 31),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Center(
                       child: Text(
-                    'Pinjam',
+                    'Kembalikan',
                     style: TextStyle(
                         fontFamily: "Inika",
                         fontSize: 20,
