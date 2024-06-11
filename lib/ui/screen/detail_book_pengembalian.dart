@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ujilevel_laravel_perpus/ui/screen/pengembalian_screen.dart';
+import 'package:ujilevel_laravel_perpus/ui/screen/menunggu_screen.dart';
 import 'package:ujilevel_laravel_perpus/ui/screen/semua_buku.dart';
 
 class DetailBookPengembalian extends StatelessWidget {
@@ -130,7 +130,7 @@ class DetailBookPengembalian extends StatelessWidget {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => PengembalianScreen()));
+                          builder: (context) => MenungguScreen(userId: 3,)));
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 12),

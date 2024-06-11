@@ -51,9 +51,9 @@ class HistoryScreen extends StatelessWidget {
 
 class Section extends StatelessWidget {
   final String title;
-  final List<Book> books;
+  final
 
-  Section({required this.title, required this.books});
+  Section({required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -76,24 +76,12 @@ class Section extends StatelessWidget {
   }
 }
 
-class Book {
+class BookItem extends StatelessWidget {
   final String imageUrl;
   final String title;
-  final String author;
   final String status;
 
-  Book({
-    required this.imageUrl,
-    required this.title,
-    required this.author,
-    required this.status,
-  });
-}
-
-class BookItem extends StatelessWidget {
-  final Book book;
-
-  BookItem({required this.book});
+  BookItem({required this.imageUrl, required this.title, required this.status});
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +99,7 @@ class BookItem extends StatelessWidget {
               );
             },
             child: Image.asset(
-              book.imageUrl,
+              imageUrl,
               height: 100,
             ),
           ),
@@ -120,21 +108,21 @@ class BookItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                book.title,
+                title,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Text(
-                'By ${book.author}',
+                'By Osama bin Laden',
                 style: TextStyle(
                   fontSize: 16,
                   fontStyle: FontStyle.italic,
                 ),
               ),
               Text(
-                book.status,
+                status,
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.green,
@@ -148,50 +136,3 @@ class BookItem extends StatelessWidget {
   }
 }
 
-class BookDetailScreen extends StatelessWidget {
-  final Book book;
-
-  BookDetailScreen({required this.book});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(book.title),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Image.asset(book.imageUrl),
-            SizedBox(height: 20),
-            Text(
-              book.title,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'By ${book.author}',
-              style: TextStyle(
-                fontSize: 20,
-                fontStyle: FontStyle.italic,
-              ),
-            ),
-            SizedBox(height: 20),
-            Text(
-              book.status,
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.green,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}

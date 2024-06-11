@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ujilevel_laravel_perpus/ui/screen/login_screen.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(
+    ProviderScope(
+      child: MainApp(),
+    )
+  );
 }
 
 class MainApp extends StatelessWidget {

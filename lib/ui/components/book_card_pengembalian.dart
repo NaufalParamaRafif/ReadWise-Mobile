@@ -1,68 +1,12 @@
 import 'package:flutter/material.dart';
 
-class PengembalianScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Pengembalian Buku'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Text(
-                    'Menunggu Peminjaman',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 8),
-              BookCard(),
-              SizedBox(height: 16.0),
-              BookCard(),
-              SizedBox(height: 16.0),
-              Row(
-                children: [
-                  Text(
-                    'Menunggu Pengembalian',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 8),
-              //
-              SizedBox(height: 16.0),
-              Row(
-                children: [
-                  Text(
-                    'Denda',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 8),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
+class BookCardPengembalian extends StatelessWidget {
+  final String image;
+  final String judul;
+  final String tanggal;
 
-class BookCard extends StatelessWidget {
+  BookCardPengembalian({required this.image, required this.judul, required this.tanggal});
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -72,8 +16,8 @@ class BookCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(
-              'assets/images/fotobuku.jpg',
+            Image.network(
+              'http://192.168.1.4:8000/storage/buku/$image',
               height: 150,
               width: 100,
               fit: BoxFit.cover,
@@ -84,7 +28,7 @@ class BookCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Negeri di ujung tanduk',
+                    judul,
                     style: TextStyle(
                       fontFamily: "Inter",
                       fontSize: 18,
@@ -93,7 +37,7 @@ class BookCard extends StatelessWidget {
                   ),
                   SizedBox(height: 8.0),
                   Text(
-                    'Tanggal peminjaman',
+                    'Tanggal pengembalian',
                     style: TextStyle(
                       fontFamily: "Inter",
                       fontSize: 14,
@@ -105,7 +49,7 @@ class BookCard extends StatelessWidget {
                         EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                     color: Colors.grey.shade300,
                     child: Text(
-                      '10-02-2022',
+                      tanggal,
                       style: TextStyle(
                         fontFamily: "Inter",
                         fontSize: 14,

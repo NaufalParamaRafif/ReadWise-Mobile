@@ -1,158 +1,187 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:ujilevel_laravel_perpus/ui/screen/pengembalian_screen.dart';
+import 'package:http/http.dart' as http;
+import 'package:ujilevel_laravel_perpus/ui/screen/menunggu_screen.dart';
 import 'package:ujilevel_laravel_perpus/ui/screen/semua_buku.dart';
 
 class DetailBookScreen extends StatelessWidget {
+  final String slug;
+
+  DetailBookScreen({required this.slug});
+
+  Future<Map<String, dynamic>> _fetchBookDetail() async {
+    print(slug);
+    final response = await http.get(Uri.parse('http://192.168.1.4:8000/api/detail-buku/$slug'));
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['buku'];
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Book Detail'),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Image.asset(
-                  "assets/images/buku.jpg",
-                  height: 200,
+      body: FutureBuilder<Map<String, dynamic>>(
+        future: _fetchBookDetail(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            final buku = snapshot.data!;
+            return SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Image.network(
+                        'http://192.168.1.4:8000/storage/buku/${buku['image']}',
+                        height: 200,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Container(
+                      padding: const EdgeInsets.all(1),
+                      child: Center(
+                        child: Text(
+                          buku['judul'],
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontFamily: "Inika",
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 1),
+                    Center(
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SemuaBukuBerdasarkan()));
+                        },
+                        child: Text(
+                          'By Morgan Housel',
+                          style: TextStyle(
+                              fontFamily: "Inter",
+                              fontSize: 16,
+                              fontWeight: FontWeight.w200,
+                              fontStyle: FontStyle.italic),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 40),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        InfoCard(
+                          label: 'Rating',
+                          value: buku['rata_rata_rating'],
+                          fontFamily: "Inika",
+                          fontWeight: FontWeight.w200,
+                          icon: Icons.star,
+                          iconColor: Colors.yellow,
+                        ),
+                        InfoCard(
+                          label: 'Halaman',
+                          value: buku['jumlah_halaman'].toString(),
+                          fontFamily: "Inika",
+                          fontWeight: FontWeight.w200,
+                        ),
+                        InfoCard(
+                          label: 'Bahasa',
+                          value: buku['bahasa'],
+                          fontFamily: "Inika",
+                          fontWeight: FontWeight.w200,
+                        ),
+                        InfoCard(
+                          label: 'Tipe',
+                          value: buku['tipe'],
+                          fontFamily: "Inika",
+                          fontWeight: FontWeight.w200,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'Synopsis',
+                      style: TextStyle(
+                          fontFamily: "Inter",
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      buku['deskripsi'],
+                      style: TextStyle(fontFamily: "Inter", fontSize: 16),
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'Penerbit : Mentari Timur Jaya',
+                      style: TextStyle(
+                          fontFamily: "Inter",
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'ISBN : ${buku['isbn']}',
+                      style: TextStyle(
+                          fontFamily: "Inter",
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'Tanggal Publish : ${buku['tanggal_terbit']}',
+                      style: TextStyle(
+                          fontFamily: "Inter",
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700),
+                    ),
+                    SizedBox(height: 20),
+                    InkWell(
+                      onTap: () {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MenungguScreen(userId: 3,)));
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Center(
+                            child: Text(
+                          'Pinjam',
+                          style: TextStyle(
+                              fontFamily: "Inika",
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white),
+                        )),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              SizedBox(height: 20),
-              Container(
-                padding: const EdgeInsets.all(1),
-                child: Center(
-                  child: Text(
-                    'The Psychology of Money: Timeless Lessons on Wealth, Greed, and Happiness',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontFamily: "Inika",
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
-                  ),
-                ),
-              ),
-              SizedBox(height: 1),
-              Center(
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => SemuaBukuBerdasarkan()));
-                  },
-                  child: Text(
-                    'By Morgan Housel',
-                    style: TextStyle(
-                        fontFamily: "Inter",
-                        fontSize: 16,
-                        fontWeight: FontWeight.w200,
-                        fontStyle: FontStyle.italic),
-                  ),
-                ),
-              ),
-              SizedBox(height: 40),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  InfoCard(
-                    label: 'Rating',
-                    value: '4.5/5',
-                    fontFamily: "Inika",
-                    fontWeight: FontWeight.w200,
-                    icon: Icons.star,
-                    iconColor: Colors.yellow,
-                  ),
-                  InfoCard(
-                    label: 'Halaman',
-                    value: '420',
-                    fontFamily: "Inika",
-                    fontWeight: FontWeight.w200,
-                  ),
-                  InfoCard(
-                    label: 'Bahasa',
-                    value: 'Indonesia',
-                    fontFamily: "Inika",
-                    fontWeight: FontWeight.w200,
-                  ),
-                  InfoCard(
-                    label: 'Tipe',
-                    value: 'Cetak',
-                    fontFamily: "Inika",
-                    fontWeight: FontWeight.w200,
-                  ),
-                ],
-              ),
-              SizedBox(height: 20),
-              Text(
-                'Synopsis',
-                style: TextStyle(
-                    fontFamily: "Inter",
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 10),
-              Text(
-                'Upaya seorang wanita muda dan istrinya untuk memiliki anak terungkap dalam kisah puitis yang surut dan mengalir seperti laut.\n\nSetelah bertahun-tahun kesulitan mencoba memiliki anak, pasangan muda akhirnya mengumumkan kehamilan mereka, hanya untuk memiliki hari yang paling menggembirakan dalam hidup mereka digantikan dengan salah satu patah hati yang tak terduga. Hubungan mereka diuji saat mereka terus maju, bekerja sama untuk menemukan kembali diri mereka di tengah-tengah keributan kehilangan yang menghancurkan, dan akhirnya menghadapi realitas yang menghancurkan jiwa.',
-                style: TextStyle(fontFamily: "Inter", fontSize: 16),
-              ),
-              SizedBox(height: 20),
-              Text(
-                'Penerbit : Mentari Timur Jaya',
-                style: TextStyle(
-                    fontFamily: "Inter",
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700),
-              ),
-              SizedBox(height: 10),
-              Text(
-                'ISBN : 696969696969',
-                style: TextStyle(
-                    fontFamily: "Inter",
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700),
-              ),
-              SizedBox(height: 10),
-              Text(
-                'Tanggal Publish : 6-9-2069',
-                style: TextStyle(
-                    fontFamily: "Inter",
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700),
-              ),
-              SizedBox(height: 20),
-              InkWell(
-                onTap: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PengembalianScreen()));
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 12),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Center(
-                      child: Text(
-                    'Pinjam',
-                    style: TextStyle(
-                        fontFamily: "Inika",
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white),
-                  )),
-                ),
-              ),
-            ],
-          ),
-        ),
+            );
+          }
+        }
       ),
     );
   }
