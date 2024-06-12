@@ -1,8 +1,7 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:ujilevel_laravel_perpus/ui/screen/detail_book_screen.dart';
 import 'package:ujilevel_laravel_perpus/util.dart';
+import '../../services.dart';
 
 class HomePageScreen extends StatefulWidget {
   const HomePageScreen({super.key});
@@ -18,17 +17,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
   @override
   void initState() {
     super.initState();
-    _bukuList = _fetchBukuList();
-  }
-
-  Future<List<dynamic>> _fetchBukuList() async {
-    final response =
-        await http.get(Uri.parse('$baseUrl/api/homepage'));
-    if (response.statusCode == 200) {
-      return json.decode(response.body)['bukus'];
-    } else {
-      throw Exception('Failed to load data');
-    }
+    _bukuList = HomePageService.fetchBukuList();
   }
 
   @override
@@ -189,7 +178,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                     padding: EdgeInsets.symmetric(
                         vertical: 3, horizontal: 10), // padding around the grid
                     itemCount:
-                        snapshot.data!.length ?? 0, // total number of items
+                        snapshot.data!.length, // total number of items
                     itemBuilder: (context, index) {
                       final buku = snapshot.data![index];
                       return InkWell(
@@ -201,8 +190,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                                       DetailBookScreen(slug: buku['slug'])));
                         },
                         child: Image.network(
-                          '$baseUrl/storage/buku/' +
-                              buku['image'],
+                          '$baseUrl/storage/buku/${buku['image']}',
                           fit: BoxFit.contain,
                         ),
                       );

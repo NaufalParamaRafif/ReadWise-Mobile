@@ -1,8 +1,69 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:ujilevel_laravel_perpus/ui/screen/login_screen.dart';
 
-class RegisterScreen extends StatelessWidget {
+import '../../util.dart';
+
+class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
+
+  @override
+  _RegisterScreenState createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
+  static String baseUrl = Util.baseUrl;
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  Future<void> registerUser() async {
+    final String apiUrl = '$baseUrl/api/register';
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'first_name': firstNameController.text,
+        'last_name': lastNameController.text,
+        'username': usernameController.text,
+        'password': passwordController.text,
+      }),
+    );
+
+    if (!mounted) return;
+
+    if (response.statusCode == 201) {
+      // Successfully registered
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginScreen()),
+      );
+    } else {
+      // Error occurred
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text(responseData['error'].toString()),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,11 +77,11 @@ class RegisterScreen extends StatelessWidget {
             border: Border.all(color: Colors.blue, width: 0.5),
             borderRadius: BorderRadius.circular(12),
           ),
-          height: 700,
+          height: 600,
           width: 320,
           child: SingleChildScrollView(
             child: Container(
-              height: 670,
+              height: 550,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -29,9 +90,9 @@ class RegisterScreen extends StatelessWidget {
                     style: TextStyle(fontWeight: FontWeight.w700, fontSize: 35),
                   ),
                   TextField(
+                    controller: firstNameController,
                     decoration: InputDecoration(
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+                      contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(6),
                       ),
@@ -40,9 +101,9 @@ class RegisterScreen extends StatelessWidget {
                     ),
                   ),
                   TextField(
+                    controller: lastNameController,
                     decoration: InputDecoration(
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+                      contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(6),
                       ),
@@ -51,9 +112,9 @@ class RegisterScreen extends StatelessWidget {
                     ),
                   ),
                   TextField(
+                    controller: usernameController,
                     decoration: InputDecoration(
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+                      contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(6),
                       ),
@@ -62,57 +123,26 @@ class RegisterScreen extends StatelessWidget {
                     ),
                   ),
                   TextField(
+                    controller: passwordController,
                     decoration: InputDecoration(
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      hintText: 'Email',
-                      isDense: true,
-                    ),
-                  ),
-                  TextField(
-                    decoration: InputDecoration(
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      hintText: 'No Telp',
-                      isDense: true,
-                    ),
-                  ),
-                  TextField(
-                    decoration: InputDecoration(
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      hintText: 'Kelas',
-                      isDense: true,
-                    ),
-                  ),
-                  TextField(
-                    decoration: InputDecoration(
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+                      contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(6),
                       ),
                       hintText: 'Password',
                       isDense: true,
                     ),
+                    obscureText: true,
                   ),
                   Row(
                     children: [
-                      SizedBox(
-                        width: 8,
-                      ),
+                      SizedBox(width: 8),
                       InkWell(
                         onTap: () {
-                          Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => LoginScreen()));
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => LoginScreen()),
+                          );
                         },
                         child: Text(
                           'Sudah punya akun?',
@@ -123,6 +153,7 @@ class RegisterScreen extends StatelessWidget {
                     ],
                   ),
                   InkWell(
+                    onTap: registerUser,
                     child: Container(
                       padding: EdgeInsets.symmetric(vertical: 14),
                       width: double.infinity,
@@ -136,7 +167,7 @@ class RegisterScreen extends StatelessWidget {
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w600,
-                            fontSize: 18
+                            fontSize: 18,
                           ),
                         ),
                       ),

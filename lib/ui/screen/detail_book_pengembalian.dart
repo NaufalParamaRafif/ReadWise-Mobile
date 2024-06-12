@@ -130,7 +130,7 @@ class DetailBookPengembalian extends StatelessWidget {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => MenungguScreen(userId: 3,)));
+                          builder: (context) => MenungguScreen()));
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 12),

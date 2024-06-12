@@ -1,27 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:ujilevel_laravel_perpus/services.dart';
 import 'package:ujilevel_laravel_perpus/ui/components/book_card_denda.dart';
 import 'package:ujilevel_laravel_perpus/ui/components/book_card_peminjaman.dart';
 import 'package:ujilevel_laravel_perpus/ui/components/book_card_pengembalian.dart';
 
-import '../../util.dart';
 
 class MenungguScreen extends StatelessWidget {
-  final int userId;
-  static String baseUrl = Util.baseUrl;
-
-  MenungguScreen({required this.userId});
-
-  Future<Map<String, dynamic>> _fetchMenungguData() async {
-    final response = await http.get(Uri.parse('$baseUrl/api/menunggu?user_id=$userId'));
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
-    } else {
-      throw Exception('Failed to load data');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +13,7 @@ class MenungguScreen extends StatelessWidget {
         title: Text('Pengembalian Buku'),
       ),
       body: FutureBuilder<Map<String, dynamic>>(
-        future: _fetchMenungguData(),
+        future: MenungguService.fetchMenungguData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());

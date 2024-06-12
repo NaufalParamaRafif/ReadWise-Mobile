@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:ujilevel_laravel_perpus/services.dart';
 import 'package:ujilevel_laravel_perpus/ui/screen/menunggu_screen.dart';
 import 'package:ujilevel_laravel_perpus/ui/screen/semua_buku.dart';
 
@@ -12,16 +11,6 @@ class DetailBookScreen extends StatelessWidget {
 
   DetailBookScreen({required this.slug});
 
-  Future<Map<String, dynamic>> _fetchBookDetail() async {
-    print(slug);
-    final response = await http.get(Uri.parse('$baseUrl/api/detail-buku/$slug'));
-    if (response.statusCode == 200) {
-      return json.decode(response.body)['buku'];
-    } else {
-      throw Exception('Failed to load data');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,14 +18,14 @@ class DetailBookScreen extends StatelessWidget {
         title: Text('Book Detail'),
       ),
       body: FutureBuilder<Map<String, dynamic>>(
-        future: _fetchBookDetail(),
+        future: BookDetailService.fetchBookDetail(slug),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
-            final buku = snapshot.data!;
+            final data = snapshot.data!;
             return SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -45,7 +34,7 @@ class DetailBookScreen extends StatelessWidget {
                   children: [
                     Center(
                       child: Image.network(
-                        '$baseUrl/storage/buku/${buku['image']}',
+                        '$baseUrl/storage/buku/${data['buku']['image']}',
                         height: 200,
                       ),
                     ),
@@ -54,7 +43,7 @@ class DetailBookScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(1),
                       child: Center(
                         child: Text(
-                          buku['judul'],
+                          data['buku']['judul'],
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontFamily: "Inika",
@@ -74,7 +63,7 @@ class DetailBookScreen extends StatelessWidget {
                                   builder: (context) => SemuaBukuBerdasarkan()));
                         },
                         child: Text(
-                          'By Morgan Housel',
+                          'By ${data['penulis']}',
                           style: TextStyle(
                               fontFamily: "Inter",
                               fontSize: 16,
@@ -89,7 +78,7 @@ class DetailBookScreen extends StatelessWidget {
                       children: [
                         InfoCard(
                           label: 'Rating',
-                          value: buku['rata_rata_rating'],
+                          value: data['buku']['rata_rata_rating'],
                           fontFamily: "Inika",
                           fontWeight: FontWeight.w200,
                           icon: Icons.star,
@@ -97,19 +86,19 @@ class DetailBookScreen extends StatelessWidget {
                         ),
                         InfoCard(
                           label: 'Halaman',
-                          value: buku['jumlah_halaman'].toString(),
+                          value: data['buku']['jumlah_halaman'].toString(),
                           fontFamily: "Inika",
                           fontWeight: FontWeight.w200,
                         ),
                         InfoCard(
                           label: 'Bahasa',
-                          value: buku['bahasa'],
+                          value: data['buku']['bahasa'],
                           fontFamily: "Inika",
                           fontWeight: FontWeight.w200,
                         ),
                         InfoCard(
                           label: 'Tipe',
-                          value: buku['tipe'],
+                          value: data['buku']['tipe'],
                           fontFamily: "Inika",
                           fontWeight: FontWeight.w200,
                         ),
@@ -125,12 +114,12 @@ class DetailBookScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 10),
                     Text(
-                      buku['deskripsi'],
+                      data['buku']['deskripsi'],
                       style: TextStyle(fontFamily: "Inter", fontSize: 16),
                     ),
                     SizedBox(height: 20),
                     Text(
-                      'Penerbit : Mentari Timur Jaya',
+                      'Status Ketersediaan : ${data['buku']['status_ketersediaan'] == 1 ? 'Tersedia' : 'Tidak tersedia'}',
                       style: TextStyle(
                           fontFamily: "Inter",
                           fontSize: 18,
@@ -138,7 +127,7 @@ class DetailBookScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 10),
                     Text(
-                      'ISBN : ${buku['isbn']}',
+                      'Category : ${data['category']}',
                       style: TextStyle(
                           fontFamily: "Inter",
                           fontSize: 18,
@@ -146,38 +135,144 @@ class DetailBookScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 10),
                     Text(
-                      'Tanggal Publish : ${buku['tanggal_terbit']}',
+                      'Penerbit : ${data['penerbit']}',
+                      style: TextStyle(
+                          fontFamily: "Inter",
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'ISBN : ${data['buku']['isbn']}',
+                      style: TextStyle(
+                          fontFamily: "Inter",
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'Tanggal Publish : ${data['buku']['tanggal_terbit']}',
                       style: TextStyle(
                           fontFamily: "Inter",
                           fontSize: 18,
                           fontWeight: FontWeight.w700),
                     ),
                     SizedBox(height: 20),
-                    InkWell(
-                      onTap: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => MenungguScreen(userId: 3,)));
-                      },
-                      child: Container(
+                    if (data['status_buku'] == '' && data['buku']['status_ketersediaan'] == 1)
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => MenungguScreen() ));
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Pinjam',
+                              style: TextStyle(
+                                fontFamily: "Inika",
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    else if (data['status_buku'] == 'mengantri_peminjaman')
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => MenungguScreen() ));
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Batal antri peminjaman',
+                              style: TextStyle(
+                                fontFamily: "Inika",
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    else if (data['status_buku'] == 'mengantri_pengembalian')
+                      Container(
                         padding: EdgeInsets.symmetric(vertical: 12),
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: Colors.blue,
+                          color: Colors.amber,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Center(
-                            child: Text(
-                          'Pinjam',
-                          style: TextStyle(
+                          child: Text(
+                            'Mengantri pengembalian',
+                            style: TextStyle(
                               fontFamily: "Inika",
                               fontSize: 20,
                               fontWeight: FontWeight.w500,
-                              color: Colors.white),
-                        )),
-                      ),
-                    ),
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      )
+                    else if (data['status_buku'] == 'mengantri_denda')
+                      Container(
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.amber,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Mengantri denda',
+                            style: TextStyle(
+                              fontFamily: "Inika",
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      )
+                    else if (data['status_buku'] == 'dipinjam')
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => MenungguScreen() ));
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.green,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Kembalikan',
+                              style: TextStyle(
+                                fontFamily: "Inika",
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
                   ],
                 ),
               ),

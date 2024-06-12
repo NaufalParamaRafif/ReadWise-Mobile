@@ -1,20 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:ujilevel_laravel_perpus/ui/screen/detail_book_pengembalian.dart';
-
 import '../../util.dart';
+import 'detail_book_pengembalian.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HistoryScreen extends StatelessWidget {
   static String baseUrl = Util.baseUrl;
 
   Future<Map<String, dynamic>> fetchHistory() async {
-    final response = await http.get(Uri.parse(
-        '$baseUrl/api/history?user_id=3'));
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+
+    if (token == null) {
+      // Handle the case when there is no token
+      throw Exception('Token not found');
+    }
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/api/history'),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
+      },
+    );
 
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
+      print(token.toString());
+      print(response.statusCode);
       throw Exception('Failed to load history');
     }
   }

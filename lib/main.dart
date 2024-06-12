@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ujilevel_laravel_perpus/ui/screen/login_screen.dart';
 
-void main() {
-  runApp(
-    ProviderScope(
-      child: MainApp(),
-    )
-  );
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(MainApp());
 }
 
 class MainApp extends StatelessWidget {
