@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../../util.dart';
+
 class BookCardDenda extends StatelessWidget {
   final String image;
   final String judul;
   final String jumlah;
+  static String baseUrl = Util.baseUrl;
+  
 
   BookCardDenda({required this.image, required this.judul, required this.jumlah});
 
@@ -17,7 +21,7 @@ class BookCardDenda extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Image.network(
-              'http://192.168.1.4:8000/storage/buku/$image',
+              '$baseUrl/storage/buku/$image',
               height: 150,
               width: 100,
               fit: BoxFit.cover,

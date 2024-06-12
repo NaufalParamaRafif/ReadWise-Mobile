@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../../util.dart';
+
 class BookCardPengembalian extends StatelessWidget {
   final String image;
   final String judul;
   final String tanggal;
+  static String baseUrl = Util.baseUrl;
 
   BookCardPengembalian({required this.image, required this.judul, required this.tanggal});
 
@@ -17,7 +20,7 @@ class BookCardPengembalian extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Image.network(
-              'http://192.168.1.4:8000/storage/buku/$image',
+              '$baseUrl/storage/buku/$image',
               height: 150,
               width: 100,
               fit: BoxFit.cover,

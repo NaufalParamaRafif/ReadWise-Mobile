@@ -1,49 +1,67 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:ujilevel_laravel_perpus/ui/screen/detail_book_pengembalian.dart';
 
+import '../../util.dart';
+
 class HistoryScreen extends StatelessWidget {
+  static String baseUrl = Util.baseUrl;
+
+  Future<Map<String, dynamic>> fetchHistory() async {
+    final response = await http.get(Uri.parse(
+        '$baseUrl/api/history?user_id=3'));
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to load history');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('History'),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Section(
-              title: 'Sedang Dipinjam',
-              books: [
-                Book(
-                  imageUrl: 'assets/images/buku 4.jpg',
-                  title: 'Theories Of Psychology',
-                  author: 'Celia Higgins',
-                  status: 'Sedang dipinjam',
+      body: FutureBuilder<Map<String, dynamic>>(
+        future: fetchHistory(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data == null) {
+            return Center(child: Text('No data found'));
+          }
+
+          final data = snapshot.data!;
+          final sedangDipinjam = (data['sedang_dipinjam'] as List)
+              .map((item) => Book.fromJson(item))
+              .toList();
+          final sudahDipinjam = (data['sudah_dipinjam'] as List)
+              .map((item) => Book.fromJson(item))
+              .toList();
+
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Section(
+                  title: 'Sedang Dipinjam',
+                  books: sedangDipinjam,
                 ),
-                Book(
-                  imageUrl: 'assets/images/buku 2.jpg',
-                  title: 'Physiological Psychology',
-                  author: 'Sherly Williams E',
-                  status: 'Sedang dipinjam',
+                SizedBox(height: 20),
+                Section(
+                  title: 'Sudah Dibaca',
+                  books: sudahDipinjam,
                 ),
               ],
             ),
-            SizedBox(height: 20),
-            Section(
-              title: 'Sudah Dibaca',
-              books: [
-                Book(
-                  imageUrl: 'assets/images/buku.jpg',
-                  title: 'The Psychology of Money',
-                  author: 'Morgan Housel',
-                  status: 'Sudah di baca',
-                ),
-              ],
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
@@ -51,9 +69,9 @@ class HistoryScreen extends StatelessWidget {
 
 class Section extends StatelessWidget {
   final String title;
-  final
+  final List<Book> books;
 
-  Section({required this.title});
+  Section({required this.title, required this.books});
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +84,7 @@ class Section extends StatelessWidget {
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
+          overflow: TextOverflow.clip,
         ),
         SizedBox(height: 10),
         Column(
@@ -76,12 +95,33 @@ class Section extends StatelessWidget {
   }
 }
 
-class BookItem extends StatelessWidget {
+class Book {
   final String imageUrl;
   final String title;
+  final String author;
   final String status;
 
-  BookItem({required this.imageUrl, required this.title, required this.status});
+  Book({
+    required this.imageUrl,
+    required this.title,
+    required this.author,
+    required this.status,
+  });
+
+  factory Book.fromJson(Map<String, dynamic> json) {
+    return Book(
+      imageUrl: json['image'],
+      title: json['judul'],
+      author: 'osas',
+      status: 'kjj',
+    );
+  }
+}
+
+class BookItem extends StatelessWidget {
+  final Book book;
+
+  BookItem({required this.book});
 
   @override
   Widget build(BuildContext context) {
@@ -98,8 +138,8 @@ class BookItem extends StatelessWidget {
                 ),
               );
             },
-            child: Image.asset(
-              imageUrl,
+            child: Image.network(
+              '${Util.baseUrl}/storage/buku/${book.imageUrl}',
               height: 100,
             ),
           ),
@@ -108,21 +148,22 @@ class BookItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                title,
+                book.title,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
+                overflow: TextOverflow.clip,
               ),
               Text(
-                'By Osama bin Laden',
+                'By ${book.author}',
                 style: TextStyle(
                   fontSize: 16,
                   fontStyle: FontStyle.italic,
                 ),
               ),
               Text(
-                status,
+                book.status,
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.green,
@@ -135,4 +176,3 @@ class BookItem extends StatelessWidget {
     );
   }
 }
-

@@ -1,18 +1,20 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:ujilevel_laravel_perpus/ui/screen/menunggu_screen.dart';
 import 'package:ujilevel_laravel_perpus/ui/screen/semua_buku.dart';
 
+import '../../util.dart';
+
 class DetailBookScreen extends StatelessWidget {
   final String slug;
+  static String baseUrl = Util.baseUrl;
 
   DetailBookScreen({required this.slug});
 
   Future<Map<String, dynamic>> _fetchBookDetail() async {
     print(slug);
-    final response = await http.get(Uri.parse('http://192.168.1.4:8000/api/detail-buku/$slug'));
+    final response = await http.get(Uri.parse('$baseUrl/api/detail-buku/$slug'));
     if (response.statusCode == 200) {
       return json.decode(response.body)['buku'];
     } else {
@@ -43,7 +45,7 @@ class DetailBookScreen extends StatelessWidget {
                   children: [
                     Center(
                       child: Image.network(
-                        'http://192.168.1.4:8000/storage/buku/${buku['image']}',
+                        '$baseUrl/storage/buku/${buku['image']}',
                         height: 200,
                       ),
                     ),

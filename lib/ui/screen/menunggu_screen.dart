@@ -1,18 +1,20 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:ujilevel_laravel_perpus/ui/components/book_card_denda.dart';
 import 'package:ujilevel_laravel_perpus/ui/components/book_card_peminjaman.dart';
 import 'package:ujilevel_laravel_perpus/ui/components/book_card_pengembalian.dart';
 
+import '../../util.dart';
+
 class MenungguScreen extends StatelessWidget {
   final int userId;
+  static String baseUrl = Util.baseUrl;
 
   MenungguScreen({required this.userId});
 
   Future<Map<String, dynamic>> _fetchMenungguData() async {
-    final response = await http.get(Uri.parse('http://192.168.1.4:8000/api/menunggu?user_id=$userId'));
+    final response = await http.get(Uri.parse('$baseUrl/api/menunggu?user_id=$userId'));
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
