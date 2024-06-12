@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:ujilevel_laravel_perpus/services.dart';
+import 'package:ujilevel_laravel_perpus/ui/screen/homepage_screen.dart';
 import 'package:ujilevel_laravel_perpus/ui/screen/menunggu_screen.dart';
 import 'package:ujilevel_laravel_perpus/ui/screen/semua_buku.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../util.dart';
 
@@ -160,8 +163,29 @@ class DetailBookScreen extends StatelessWidget {
                     SizedBox(height: 20),
                     if (data['status_buku'] == '' && data['buku']['status_ketersediaan'] == 1)
                       InkWell(
-                        onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => MenungguScreen() ));
+                        onTap: () async {
+                          final SharedPreferences prefs = await SharedPreferences.getInstance();
+                          final String? token = prefs.getString('token');
+
+                          if (token == null) {
+                            // Handle the case when there is no token
+                            throw Exception('Token not found');
+                          }
+                          final response = await http.post(
+                            Uri.parse('${Util.baseUrl}/api/mengantri-peminjaman/$slug'),
+                            headers: {
+                              'Content-Type': 'application/json',
+                              'Authorization': 'Bearer $token',
+                            },
+                          );
+
+                          if (response.statusCode == 200) {
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MenungguScreen()));
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('${response.statusCode} | Gagal meminjam buku!')),
+                            );
+                          }
                         },
                         child: Container(
                           padding: EdgeInsets.symmetric(vertical: 12),
@@ -185,8 +209,32 @@ class DetailBookScreen extends StatelessWidget {
                       )
                     else if (data['status_buku'] == 'mengantri_peminjaman')
                       InkWell(
-                        onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => MenungguScreen() ));
+                        onTap: () async {
+                          final SharedPreferences prefs = await SharedPreferences.getInstance();
+                          final String? token = prefs.getString('token');
+
+                          if (token == null) {
+                            // Handle the case when there is no token
+                            throw Exception('Token not found');
+                          }
+                          final response = await http.delete(
+                            Uri.parse('${Util.baseUrl}/mengantri-peminjaman/$slug'),
+                            headers: {
+                              'Content-Type': 'application/json',
+                              'Authorization': 'Bearer $token',
+                            },
+                          );
+
+                          if (response.statusCode == 200) {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => HomePageScreen()),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Gagal membatalkan antrian!')),
+                            );
+                          }
                         },
                         child: Container(
                           padding: EdgeInsets.symmetric(vertical: 12),
@@ -218,7 +266,7 @@ class DetailBookScreen extends StatelessWidget {
                         ),
                         child: Center(
                           child: Text(
-                            'Mengantri pengembalian',
+                            'Mengantri pengembalian...',
                             style: TextStyle(
                               fontFamily: "Inika",
                               fontSize: 20,
@@ -233,12 +281,12 @@ class DetailBookScreen extends StatelessWidget {
                         padding: EdgeInsets.symmetric(vertical: 12),
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: Colors.amber,
+                          color: Colors.red[700],
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Center(
                           child: Text(
-                            'Mengantri denda',
+                            'Menunggu pembayaran denda',
                             style: TextStyle(
                               fontFamily: "Inika",
                               fontSize: 20,
@@ -250,8 +298,29 @@ class DetailBookScreen extends StatelessWidget {
                       )
                     else if (data['status_buku'] == 'dipinjam')
                       InkWell(
-                        onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => MenungguScreen() ));
+                        onTap: () async {
+                          final SharedPreferences prefs = await SharedPreferences.getInstance();
+                          final String? token = prefs.getString('token');
+
+                          if (token == null) {
+                            // Handle the case when there is no token
+                            throw Exception('Token not found');
+                          }
+                          final response = await http.post(
+                            Uri.parse('${Util.baseUrl}/api/mengantri-pengembalian/$slug'),
+                            headers: {
+                              'Content-Type': 'application/json',
+                              'Authorization': 'Bearer $token',
+                            },
+                          );
+
+                          if (response.statusCode == 200) {
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MenungguScreen()));
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('${response.statusCode} | Gagal mengembalikan buku!')),
+                            );
+                          }
                         },
                         child: Container(
                           padding: EdgeInsets.symmetric(vertical: 12),

@@ -71,7 +71,7 @@ class MenungguScreen extends StatelessWidget {
                     SizedBox(height: 8),
                     (dataPengembalian.length ?? 0) > 0 ? ListView.builder(
                       shrinkWrap: true,
-                      itemCount: dataPeminjaman.length,
+                      itemCount: dataPengembalian.length,
                       itemBuilder: (context, index) {
                         final image = dataPengembalian[index]['image'];
                         final judul = dataPengembalian[index]['judul'];
@@ -104,7 +104,7 @@ class MenungguScreen extends StatelessWidget {
                       itemBuilder: (context, index) {
                         final image = dataDenda[index]['image'];
                         final judul = dataDenda[index]['judul'];
-                        final jumlah = dataDenda[index]['denda'];
+                        final jumlah = dataDenda[index]['denda'].toString();
 
                         return Column(
                           children: [
