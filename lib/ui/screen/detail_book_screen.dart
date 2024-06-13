@@ -218,7 +218,7 @@ class DetailBookScreen extends StatelessWidget {
                             throw Exception('Token not found');
                           }
                           final response = await http.delete(
-                            Uri.parse('${Util.baseUrl}/mengantri-peminjaman/$slug'),
+                            Uri.parse('${Util.baseUrl}/api/mengantri-peminjaman/$slug'),
                             headers: {
                               'Content-Type': 'application/json',
                               'Authorization': 'Bearer $token',
@@ -232,7 +232,7 @@ class DetailBookScreen extends StatelessWidget {
                             );
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Gagal membatalkan antrian!')),
+                              SnackBar(content: Text('${response.statusCode} | Gagal membatalkan antrian!')),
                             );
                           }
                         },

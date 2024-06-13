@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Util {
-  static String baseUrl = 'http://192.168.1.4:8000';
+  static String baseUrl = 'http://192.168.0.4:8000';
 
   static Future<void> getUserInfo() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();

@@ -170,20 +170,20 @@ class BookItem extends StatelessWidget {
                 ),
                 overflow: TextOverflow.clip,
               ),
-              Text(
-                'By ${book.author}',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
-              Text(
-                book.status,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.green,
-                ),
-              ),
+              // Text(
+              //   'By ${book.author}',
+              //   style: TextStyle(
+              //     fontSize: 16,
+              //     fontStyle: FontStyle.italic,
+              //   ),
+              // ),
+              // Text(
+              //   book.status,
+              //   style: TextStyle(
+              //     fontSize: 16,
+              //     color: Colors.green,
+              //   ),
+              // ),
             ],
           ),
         ],
